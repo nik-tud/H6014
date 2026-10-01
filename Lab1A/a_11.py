@@ -1,0 +1,6 @@
+val = int(input("Enter a decimal number to shift left and right by 1 and 2 in binary: "))
+print("Decimal: ", val, "Binary: ", bin(val))
+print("Shift left (1): ", val << 1, bin(val << 1))
+print("Shift right (1): ", val >> 1, bin(val >> 1))
+print("Shift left (2): ", val << 2, bin(val << 2))
+print("Shift right (2): ", val >> 2, bin(val >> 2))

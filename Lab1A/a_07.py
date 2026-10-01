@@ -1,0 +1,6 @@
+val1 = int(input("Enter a number you wish to show the dec, bin, hex, oct and char value of: "))
+print("Dec:\t", val1)
+print("Bin:\t", bin(val1))
+print("Hex:\t", hex(val1))
+print("Oct:\t", oct(val1))
+print("Char:\t", chr(val1))
