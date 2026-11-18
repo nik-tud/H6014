@@ -33,7 +33,10 @@ def undo_step3(s, shift=4):
 undo_steps = {"1": undo_step1, "2": undo_step2, "3": undo_step3}
 def decode(message):
     s = message.strip()
+
     while s and s[0] in undo_steps:
+        # print("STEP: ", s[0])
+        # print("ENCODED TEXT FOR STEP:", s[1:])
         marker, body = s[0], s[1:]
         s = undo_steps[marker](body)
     return s
