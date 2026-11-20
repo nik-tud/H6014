@@ -1,0 +1,27 @@
+Steps to do Lab 15 Part G on a M1 macOS laptop using homebrew as the package manager:
+(Note that the commands to run in the lab do not work on macOS: sudo a2enmod ssl....)
+
+openssl genrsa -out ca.key 2048
+openssl req -nodes -new -key ca.key -out ca.csr
+(Will be asked to insert information for this certificate)
+openssl x509 -req -days 365 -in ca.csr -signkey ca.key -out ca.crt
+mkdir -p $(brew --prefix)/etc/httpd/ssl
+mv ca.crt ca.key ca.csr $(brew --prefix)/etc/httpd/ssl/
+(If you do not have Apache installed with Homebrew proceed with next steps otherwise skip to nano $(brew --prefix)/etc/httpd/httpd.conf command)
+brew install httpd
+sudo apachectl stop
+sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist 2>/dev/null
+nano $(brew --prefix)/etc/httpd/httpd.conf
+2. Find and uncomment (remove the # at the start) these two lines:
+• LoadModule ssl_module lib/httpd/modules/mod_ssl.so
+• LoadModule socache_shmcb_module lib/httpd/modules/mod_socache_shmcb.so
+3. Include the SSL configuration file by uncommenting this line near the bottom of httpd.conf:
+• Include /opt/homebrew/etc/httpd/extra/httpd-ssl.conf (the path will match your brew --prefix)
+Save and exit
+nano $(brew --prefix)/etc/httpd/extra/httpd-ssl.conf
+Update the certificate paths inside the <VirtualHost _default_:8443> block (note that Homebrew defaults to port 8443 instead of 443 so it doesn't require sudo):apache
+SSLCertificateFile "/opt/homebrew/etc/httpd/ssl/ca.crt"
+SSLCertificateKeyFile "/opt/homebrew/etc/httpd/ssl/ca.key"
+brew services restart httpd
+
+And Done! Now visit https://localhost:8443 in a browser and you should be greeted with a your connection is not private error as the site is using a self-signed certificate!
